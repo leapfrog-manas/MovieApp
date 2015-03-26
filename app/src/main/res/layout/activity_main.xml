@@ -3,12 +3,15 @@
     android:layout_width="fill_parent"
     android:id="@+id/drawer_layout"
     android:background="#ffffff"
+
     >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:fitsSystemWindows="true"
+        >
 
         <include
             layout="@layout/app_bar_default"
@@ -28,5 +31,6 @@
         android:layout_height="fill_parent"
         android:id="@+id/fragment_for_drawer"
         android:layout_gravity="start"
+
         class="com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler"></FrameLayout>
 </android.support.v4.widget.DrawerLayout>
