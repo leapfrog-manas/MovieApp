@@ -61,18 +61,20 @@
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
+
     <View
         android:layout_below="@+id/relativelayout2"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:id="@+id/divider"
-        android:background="#B6B6B6"/>
+        android:background="#B6B6B6" />
+
     <ListView
         android:layout_below="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
         android:id="@+id/listviewsidemenu"
-
         >
 
     </ListView>

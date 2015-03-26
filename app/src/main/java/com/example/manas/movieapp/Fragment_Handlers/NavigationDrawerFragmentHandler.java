@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -17,27 +18,40 @@ import java.util.List;
 /**
  * Created by Manas on 3/24/2015.
  */
-public class NavigationDrawerFragmentHandler extends Fragment {
-ListView sidelist;
+public class NavigationDrawerFragmentHandler extends Fragment implements AdapterView.OnItemClickListener {
+    ListView sidelist;
     List<String> itemlist = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View v= inflater.inflate(R.layout.fragment_navigation_drawer,container,false);
+        View v = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
         getListReady();
-        arrayAdapter = new ArrayAdapter<String>(getActivity(),R.layout.simple_list_item,R.id.tv1,itemlist);
+        arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_list_item, R.id.tv1, itemlist);
         sidelist = (ListView) v.findViewById(R.id.listviewsidemenu);
+
         sidelist.setAdapter(arrayAdapter);
-        return  v;
+        sidelist.setItemChecked(0, true);
+        sidelist.setOnItemClickListener(this);
+
+        return v;
     }
 
-    public void getListReady(){
-         String[] items = new String[]{"Top Rented", "Box Office Movies","Up Comming Movies","In Theater Movies"};
-         for(int i =0;i<items.length;i++){
-             itemlist.add(items[i]);
-         }
-     }
+    public void getListReady() {
+        String[] items = new String[]{"Top Rented", "Box Office Movies", "Up Comming Movies", "In Theater Movies"};
+        for (int i = 0; i < items.length; i++) {
+            itemlist.add(items[i]);
+        }
+    }
 
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        setSelectedItem(position);
+    }
+
+
+    public void setSelectedItem(int position) {
+        sidelist.setItemChecked(position, true);
+    }
 }
