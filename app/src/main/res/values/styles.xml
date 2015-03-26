@@ -5,6 +5,9 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/accentColor</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="divider">@color/colorDivider</item>
+        <item name="icon">@color/colorTextIcon</item>
 
     </style>
 
@@ -15,6 +18,7 @@
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/accentColor</item>
+        <item name="icon">@color/colorTextIcon</item>
 
 
     </style>
