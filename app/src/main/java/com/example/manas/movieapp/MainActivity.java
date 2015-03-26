@@ -1,29 +1,27 @@
 package com.example.manas.movieapp;
 
 import android.content.res.Configuration;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
-import com.example.manas.movieapp.Adapters.HomeFragmentRCVAdapter;
 import com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler;
 import com.example.manas.movieapp.Fragment_Handlers.NavigationDrawerFragmentHandler;
+import com.example.manas.movieapp.interfaces.ToolbarAlphaChanger;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ToolbarAlphaChanger {
     DrawerLayout drawerlayout;
     ActionBarDrawerToggle dtoggle;
-    Toolbar toolbar;
+    public Toolbar toolbar;
+
 
 
     @Override
@@ -39,8 +37,14 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(8);
 
+
+
+
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         drawerlayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         dtoggle = new ActionBarDrawerToggle(this, drawerlayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -99,6 +103,24 @@ public class MainActivity extends ActionBarActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         dtoggle.onConfigurationChanged(newConfig);
+    }
+
+    /*
+    /@Author Manas Shrestha
+    @params Not req
+    @returns Void
+    This method will be called by the fragment classes to set the alpha of toolbar.
+     */
+    @Override
+    public void changeAlpha(int alpha) {
+
+        toolbar.getBackground().setAlpha(alpha);
+    }
+
+    @Override
+    public void defaultAlpha() {
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        toolbar.getBackground().setAlpha(225);
     }
 
 

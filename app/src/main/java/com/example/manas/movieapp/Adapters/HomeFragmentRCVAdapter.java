@@ -1,15 +1,11 @@
 package com.example.manas.movieapp.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.TransitionManager;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +13,13 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler;
 import com.example.manas.movieapp.Fragment_Handlers.SingleMovieFragmentHandler;
 import com.example.manas.movieapp.Info.MovieInfo;
 import com.example.manas.movieapp.MainActivity;
 import com.example.manas.movieapp.R;
+import com.example.manas.movieapp.interfaces.ToolbarAlphaChanger;
 
 import java.util.List;
-
-import static android.support.v7.widget.RecyclerView.ViewHolder;
 
 /**
  * Created by Manas on 3/23/2015.
@@ -35,15 +29,18 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
     LayoutInflater layoutInflater;
     FragmentManager fragmentManager;
     List<MovieInfo> movieInfoList;
-    ViewGroup mRoot;
 
 
-    public HomeFragmentRCVAdapter(Context c, FragmentManager fragmentManager, List<MovieInfo> movieInfoList,ViewGroup mRoot) {
+
+    public HomeFragmentRCVAdapter(Context c, FragmentManager fragmentManager, List<MovieInfo> movieInfoList) {
         this.context = c;
         layoutInflater = layoutInflater.from(context);
         this.fragmentManager = fragmentManager;
         this.movieInfoList = movieInfoList;
-        this.mRoot = mRoot;
+
+
+
+
 
     }
 
@@ -74,6 +71,8 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
         return movieInfoList.size();
     }
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView moviePoster;
         TextView movieName;
@@ -103,16 +102,17 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
             bundle.putInt("poster_id", poster_id);
 
             SingleMovieFragmentHandler singleMovieFragmentHandler = new SingleMovieFragmentHandler(bundle, fragmentManager);
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,0,android.R.anim.slide_out_right,0);
+            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, 0, android.R.anim.slide_out_right, 0);
 
             fragmentTransaction.add(R.id.fragment_for_homepage, singleMovieFragmentHandler);
+
             fragmentTransaction.addToBackStack("tag");
             fragmentTransaction.commit();
         }
 
-        public void toggleviews(View... views){
-            for(View current:views){
-                if(current.getVisibility()==View.VISIBLE){
+        public void toggleviews(View... views) {
+            for (View current : views) {
+                if (current.getVisibility() == View.VISIBLE) {
                     current.setVisibility(View.INVISIBLE);
                 }
             }
