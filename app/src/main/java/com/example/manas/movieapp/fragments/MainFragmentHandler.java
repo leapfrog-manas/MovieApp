@@ -1,26 +1,19 @@
-package com.example.manas.movieapp.Fragment_Handlers;
+package com.example.manas.movieapp.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.manas.movieapp.Adapters.HomeFragmentRCVAdapter;
 import com.example.manas.movieapp.Info.MovieInfo;
-import com.example.manas.movieapp.MainActivity;
 import com.example.manas.movieapp.R;
 import com.example.manas.movieapp.interfaces.ToolbarAlphaChanger;
 
@@ -30,16 +23,16 @@ import java.util.List;
 /**
  * Created by Manas on 3/23/2015.
  */
-public class MainFragmentHandler extends Fragment {
+public class MainFragmentHandler extends Fragment implements ToolbarAlphaChanger{
     ViewGroup mRoot;
     FragmentManager fragmentManager;
     List<MovieInfo> movieInfoList = new ArrayList<>();
     RecyclerView recyclerView;
-    LinearLayout linearLayout;
+    RelativeLayout linearLayout;
+    ToolbarAlphaChanger toolbarAlphaChanger;
 
 
-
-    public MainFragmentHandler(){
+    public MainFragmentHandler() {
 
     }
 
@@ -49,42 +42,56 @@ public class MainFragmentHandler extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        toolbarAlphaChanger.changeAlpha(255,"asd");
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        toolbarAlphaChanger = (ToolbarAlphaChanger) activity;
 
 
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        linearLayout = (LinearLayout) v.findViewById(R.id.linearlayout);
+        linearLayout = (RelativeLayout) v.findViewById(R.id.linearlayout);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0,100,0,0);
+
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 100, 0, 0);
         recyclerView.setLayoutParams(lp);
 
+
+
+
         movieInfoList = getMovieinfo();
-
-
         return v;
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
-        recyclerView.setAdapter(new HomeFragmentRCVAdapter(getActivity(), fragmentManager,movieInfoList));
+        toolbarAlphaChanger.changeAlpha(255,"MovieApp");
+        recyclerView.setAdapter(new HomeFragmentRCVAdapter(getActivity(), fragmentManager, movieInfoList));
+        toolbarAlphaChanger.changeAlpha(255,"MovieApp");
     }
 
     public List<MovieInfo> getMovieinfo() {
         List<MovieInfo> mf = new ArrayList<>();
-        String[] name = new String[]{"21 jump street", "CastAway", "Forrest Gump", "Shawshank Redamption", "Whiplash","The Tourist","12 Years A Slave"};
-        int[] poster_id = new int[]{R.drawable.twentyfirstjumpstreet, R.drawable.castaway, R.drawable.forrestgump, R.drawable.shawshankredemption, R.drawable.whiplash,R.drawable.thetourist,R.drawable.twelveyearsaslave};
-        String[] rating = new String[]{"7.2", "7.7", "8.8", "9.3", "8.6","6","8.1"};
+        String[] name = new String[]{"21 jump street", "CastAway", "Forrest Gump", "Shawshank Redamption", "Whiplash", "The Tourist", "12 Years A Slave"};
+        int[] poster_id = new int[]{R.drawable.twentyfirstjumpstreet, R.drawable.castaway, R.drawable.forrestgump, R.drawable.shawshankredemption, R.drawable.whiplash, R.drawable.thetourist, R.drawable.twelveyearsaslave};
+        String[] rating = new String[]{"7.2", "7.7", "8.8", "9.3", "8.6", "6", "8.1"};
         String[] synopsis = new String[]{"When cops Schmidt (Jonah Hill) and Jenko (Channing Tatum) join the secret Jump Street unit, they use their youthful appearances to go under cover as high-school students. They trade in their guns and badges for backpacks, and set out to shut down a dangerous drug ring. But, as time goes on, Schmidt and Jenko discover that high school is nothing like it was just a few years earlier -- and, what's more, they must again confront the teenage terror and anxiety they thought they had left behind.",
                 "In 1995, Chuck Noland (Tom Hanks) is a time-obsessed systems engineer, who travels worldwide resolving productivity problems at FedEx depots. He is in a long-term relationship with Kelly Frears (Helen Hunt), with whom he lives in Memphis, Tennessee. Although the couple wants to get married, Chuck's busy schedule interferes with their relationship. A Christmas with relatives is interrupted when Chuck is summoned to resolve a problem in Malaysia. While flying through a violent storm, his airplane crashes into the Pacific Ocean. Chuck is able to escape the sinking plane and is saved by an inflatable life-raft but in the process, loses the raft's emergency locator transmitter. He clings to the life-raft, loses consciousness, and floats all night before being washed up on an island. After he awakens, he explores the island and soon discovers that it is uninhabited.\n" +
                         "\n" +
@@ -96,8 +103,8 @@ public class MainFragmentHandler extends Fragment {
                 , "Slow-witted Forrest Gump (Tom Hanks) has never thought of himself as disadvantaged, and thanks to his supportive mother (Sally Field), he leads anything but a restricted life. Whether dominating on the gridiron as a college football star, fighting in Vietnam or captaining a shrimp boat, Forrest inspires people with his childlike optimism. But one person Forrest cares about most may be the most difficult to save -- his childhood love, the sweet but troubled Jenny (Robin Wright)."
                 , "Andy Dufresne (Tim Robbins) is sentenced to two consecutive life terms in prison for the murders of his wife and her lover and is sentenced to a tough prison. However, only Andy knows he didn't commit the crimes. While there, he forms a friendship with Red (Morgan Freeman), experiences brutality of prison life, adapts, helps the warden, etc., all in 19 years.",
                 "A first-year music student (Miles Teller) wins a seat behind the drums in a jazz band led by a teacher (J.K. Simmons) who uses fear and intimidation to push his students to perfection."
-        ,"During an impromptu trip to Europe to mend a broken heart, math teacher Frank Tupelo (Johnny Depp) finds himself in an extraordinary situation when an alluring stranger, Elise (Angelina Jolie), places herself in his path. Their seemingly innocent flirtation turns into a dangerous game of cat and mouse while various people, who all think that Frank is Elise's thieving paramour, Alexander Pearce, try to capture the pair.",
-        "In the years before the Civil War, Solomon Northup (Chiwetel Ejiofor), a free black man from upstate New York, is kidnapped and sold into slavery in the South. Subjected to the cruelty of one malevolent owner (Michael Fassbender), he also finds unexpected kindness from another, as he struggles continually to survive and maintain some of his dignity. Then in the 12th year of the disheartening ordeal, a chance meeting with an abolitionist from Canada changes Solomon's life forever."
+                , "During an impromptu trip to Europe to mend a broken heart, math teacher Frank Tupelo (Johnny Depp) finds himself in an extraordinary situation when an alluring stranger, Elise (Angelina Jolie), places herself in his path. Their seemingly innocent flirtation turns into a dangerous game of cat and mouse while various people, who all think that Frank is Elise's thieving paramour, Alexander Pearce, try to capture the pair.",
+                "In the years before the Civil War, Solomon Northup (Chiwetel Ejiofor), a free black man from upstate New York, is kidnapped and sold into slavery in the South. Subjected to the cruelty of one malevolent owner (Michael Fassbender), he also finds unexpected kindness from another, as he struggles continually to survive and maintain some of his dignity. Then in the 12th year of the disheartening ordeal, a chance meeting with an abolitionist from Canada changes Solomon's life forever."
         };
 
         for (int i = 0; i < name.length; i++) {
@@ -108,5 +115,15 @@ public class MainFragmentHandler extends Fragment {
         return mf;
     }
 
+
+    @Override
+    public void changeAlpha(int alpha, String title) {
+
+    }
+
+    @Override
+    public void defaultAlpha() {
+
+    }
 
 }

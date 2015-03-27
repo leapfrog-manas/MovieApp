@@ -1,19 +1,20 @@
 package com.example.manas.movieapp;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
-import com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler;
-import com.example.manas.movieapp.Fragment_Handlers.NavigationDrawerFragmentHandler;
+import com.example.manas.movieapp.fragments.MainFragmentHandler;
+import com.example.manas.movieapp.fragments.NavigationDrawerFragmentHandler;
+import com.example.manas.movieapp.fragments.SingleMovieFragmentHandler;
 import com.example.manas.movieapp.interfaces.ToolbarAlphaChanger;
 
 
@@ -88,10 +89,7 @@ public class MainActivity extends ActionBarActivity implements ToolbarAlphaChang
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         if (dtoggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -107,21 +105,36 @@ public class MainActivity extends ActionBarActivity implements ToolbarAlphaChang
 
     /*
     /@Author Manas Shrestha
-    @params Not req
+    @params Not required
     @returns Void
     This method will be called by the fragment classes to set the alpha of toolbar.
      */
     @Override
-    public void changeAlpha(int alpha) {
-
+    public void changeAlpha(int alpha,String title) {
+        int asd = alpha/3;
+        Log.e("Chalne Alfa","Chane Alfa");
         toolbar.getBackground().setAlpha(alpha);
+        if(title != null){
+            toolbar.setTitle(title);
+        }
+
+
     }
 
     @Override
     public void defaultAlpha() {
-        toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        toolbar.getBackground().setAlpha(225);
+//        toolbar.getBackground().setAlpha(275);
+    Log.e("Default Alfa","Default Alfa");
+        getSupportActionBar().getCustomView().setAlpha(275);
     }
+
+
+    public void startSingleMovieViewActivity(Bundle bundle){
+        Intent intent = new Intent(MainActivity.this, SingleMovieFragmentHandler.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    };
 
 
 }

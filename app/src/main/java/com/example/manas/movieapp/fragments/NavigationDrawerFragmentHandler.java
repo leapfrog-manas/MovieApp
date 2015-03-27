@@ -1,4 +1,4 @@
-package com.example.manas.movieapp.Fragment_Handlers;
+package com.example.manas.movieapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

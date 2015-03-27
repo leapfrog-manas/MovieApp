@@ -1,6 +1,5 @@
 package com.example.manas.movieapp.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -13,11 +12,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.manas.movieapp.Fragment_Handlers.SingleMovieFragmentHandler;
-import com.example.manas.movieapp.Info.MovieInfo;
 import com.example.manas.movieapp.MainActivity;
+import com.example.manas.movieapp.fragments.MainFragmentHandler;
+import com.example.manas.movieapp.fragments.SingleMovieFragmentHandler;
+import com.example.manas.movieapp.Info.MovieInfo;
 import com.example.manas.movieapp.R;
-import com.example.manas.movieapp.interfaces.ToolbarAlphaChanger;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
     LayoutInflater layoutInflater;
     FragmentManager fragmentManager;
     List<MovieInfo> movieInfoList;
-
+    MainActivity mainActivity;
 
 
     public HomeFragmentRCVAdapter(Context c, FragmentManager fragmentManager, List<MovieInfo> movieInfoList) {
@@ -37,9 +36,7 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
         layoutInflater = layoutInflater.from(context);
         this.fragmentManager = fragmentManager;
         this.movieInfoList = movieInfoList;
-
-
-
+        this.mainActivity = (MainActivity) c;
 
 
     }
@@ -47,10 +44,9 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
     @Override
     public HomeFragmentRCVAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = layoutInflater.inflate(R.layout.card_view_for_recycler_view, viewGroup, false);
-
         ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
 
+        return viewHolder;
     }
 
     @Override
@@ -59,7 +55,6 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
         holder.moviePoster.setImageResource(mf.poster_id);
         holder.movieName.setText(mf.Name);
         holder.movieRating.setRating(Float.parseFloat(mf.rating) / 2);
-
         holder.name = mf.Name;
         holder.rating = mf.rating;
         holder.poster_id = mf.poster_id;
@@ -70,7 +65,6 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
     public int getItemCount() {
         return movieInfoList.size();
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -88,36 +82,22 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
             movieName = (TextView) itemView.findViewById(R.id.movieName);
             movieRating = (RatingBar) itemView.findViewById(R.id.movieRating);
 
-
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             Bundle bundle = new Bundle();
             bundle.putString("name", name);
             bundle.putString("rating", rating);
             bundle.putString("synopsis", synopsis);
             bundle.putInt("poster_id", poster_id);
 
-            SingleMovieFragmentHandler singleMovieFragmentHandler = new SingleMovieFragmentHandler(bundle, fragmentManager);
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left, 0, android.R.anim.slide_out_right, 0);
-
-            fragmentTransaction.add(R.id.fragment_for_homepage, singleMovieFragmentHandler);
-
-            fragmentTransaction.addToBackStack("tag");
-            fragmentTransaction.commit();
-        }
-
-        public void toggleviews(View... views) {
-            for (View current : views) {
-                if (current.getVisibility() == View.VISIBLE) {
-                    current.setVisibility(View.INVISIBLE);
-                }
-            }
+            mainActivity.startSingleMovieViewActivity(bundle);
 
         }
+
+
     }
 
 

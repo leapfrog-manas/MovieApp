@@ -20,7 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/fragment_for_homepage"
-            class="com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler">
+            class="com.example.manas.movieapp.fragments.MainFragmentHandler">
 
             </FrameLayout>
         <include
@@ -36,7 +36,7 @@
         android:id="@+id/fragment_for_drawer"
         android:layout_gravity="start"
 
-        class="com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler">
+        class="com.example.manas.movieapp.fragments.MainFragmentHandler">
 
         </FrameLayout>
 </android.support.v4.widget.DrawerLayout>
