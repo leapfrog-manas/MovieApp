@@ -1,28 +1,39 @@
 package com.example.manas.movieapp;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
+import android.view.ViewGroup;
+import com.example.manas.movieapp.Utilities.DatabaseHelper;
 import com.example.manas.movieapp.fragments.MainFragmentHandler;
 import com.example.manas.movieapp.fragments.NavigationDrawerFragmentHandler;
 import com.example.manas.movieapp.fragments.SingleMovieFragmentHandler;
-import com.example.manas.movieapp.interfaces.ToolbarAlphaChanger;
+
+import java.io.File;
 
 
-public class MainActivity extends ActionBarActivity implements ToolbarAlphaChanger {
+
+public class MainActivity extends ActionBarActivity {
     DrawerLayout drawerlayout;
     ActionBarDrawerToggle dtoggle;
-    public Toolbar toolbar;
+    Toolbar toolbar;
 
+    String[] name = new String[]{"21 jump street", "CastAway", "Forrest Gump", "Shawshank Redamption", "Whiplash", "The Tourist", "12 Years A Slave"};
 
 
     @Override
@@ -30,6 +41,7 @@ public class MainActivity extends ActionBarActivity implements ToolbarAlphaChang
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeEveryThing();
+
     }
 
     public void initializeEveryThing() {
@@ -39,8 +51,6 @@ public class MainActivity extends ActionBarActivity implements ToolbarAlphaChang
         getSupportActionBar().setHomeButtonEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setElevation(8);
-
-
 
 
         toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -72,6 +82,12 @@ public class MainActivity extends ActionBarActivity implements ToolbarAlphaChang
         fragmenttransaction.replace(R.id.fragment_for_homepage, mainFragmentHandler);
         fragmenttransaction.replace(R.id.fragment_for_drawer, new NavigationDrawerFragmentHandler());
         fragmenttransaction.commit();
+
+        if(doesDatabaseExist(this,"Movie") == false){
+            DatabaseHelper db = new DatabaseHelper(this);
+            db.getWritableDatabase();
+            db.insertMovieName(name);
+        }
     }
 
 
@@ -103,38 +119,43 @@ public class MainActivity extends ActionBarActivity implements ToolbarAlphaChang
         dtoggle.onConfigurationChanged(newConfig);
     }
 
-    /*
-    /@Author Manas Shrestha
-    @params Not required
-    @returns Void
-    This method will be called by the fragment classes to set the alpha of toolbar.
-     */
-    @Override
-    public void changeAlpha(int alpha,String title) {
-        int asd = alpha/3;
-        Log.e("Chalne Alfa","Chane Alfa");
-        toolbar.getBackground().setAlpha(alpha);
-        if(title != null){
-            toolbar.setTitle(title);
-        }
 
-
-    }
-
-    @Override
-    public void defaultAlpha() {
-//        toolbar.getBackground().setAlpha(275);
-    Log.e("Default Alfa","Default Alfa");
-        getSupportActionBar().getCustomView().setAlpha(275);
-    }
-
-
-    public void startSingleMovieViewActivity(Bundle bundle){
+    public void startSingleMovieViewActivity(Bundle bundle, ViewGroup V) {
+//        Explode fade = new Explode();
+//        fade.setDuration(5000);
+//        TransitionManager.beginDelayedTransition(V, fade);
+//        toggleVisibility(V);
+//        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,null);
         Intent intent = new Intent(MainActivity.this, SingleMovieFragmentHandler.class);
         intent.putExtras(bundle);
         startActivity(intent);
 
+    }
+
+    private void toggleVisibility(View... v) {
+for(View current : v){
+    if(current.getVisibility() == View.VISIBLE){
+        current.setVisibility(View.INVISIBLE);
+    }
+}
     };
 
+    /**
+     * method checks database existence.
+     * @param context
+     * @param dbName
+     * @return true if database exist
+     */
 
-}
+    public static boolean doesDatabaseExist(Context context, String dbName) {
+        File dbFile = context.getDatabasePath(dbName);
+        return dbFile.exists();
+    }
+
+
+
+    }
+
+
+
+

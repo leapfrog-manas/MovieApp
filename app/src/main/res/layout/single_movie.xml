@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#ffffff"
     >
 
 
@@ -11,23 +13,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:visibility="invisible"
+        >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
-            <com.example.manas.movieapp.Utilities.AspectRatioImageView
+            <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="200dp"
                 android:src="@drawable/forrestgump"
                 android:scaleType="fitXY"
-                android:id="@+id/posteriv"
+                android:id="@+id/backdropiv"
                 android:adjustViewBounds="true" />
 
+            <ImageView
+                android:layout_marginLeft="25dp"
+                android:layout_width="65dp"
+                android:layout_height="75dp"
+                android:background="@null"
+                android:padding="1dp"
+                android:scaleType="fitXY"
+                android:id="@+id/posterIV"
+                android:layout_alignBottom="@+id/backdropiv"
+
+                />
+
             <LinearLayout
+                android:layout_below="@+id/backdropiv"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -65,19 +82,102 @@
                     android:textColor="#727272"
                     android:id="@+id/synopsisTV"
                     android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Budget"
 
+                    android:textSize="16sp"
+                    android:textColor="#727272" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#727272"
+                    android:id="@+id/budgetTV"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Revenue"
+
+                    android:textSize="16sp"
+                    android:textColor="#727272" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#727272"
+                    android:id="@+id/revenueTV"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Language"
+
+                    android:textSize="16sp"
+                    android:textColor="#727272" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#727272"
+                    android:id="@+id/languageTV"
+                    android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cast"
+                    android:textColor="#727272"
+                    android:textSize="16sp"
+                    />
                 <ListView
                     android:layout_width="wrap_content"
-                    android:layout_height="200dp"
-                    android:id="@+id/listviewReviews">
+                    android:layout_height="600dp"
+                    android:id="@+id/castLV"
+                    ></ListView>
 
-                </ListView>
+
             </LinearLayout>
 
-        </LinearLayout>
+
+        </RelativeLayout>
     </ScrollView>
 
     <include
         layout="@layout/app_bar_default"
         android:id="@+id/appbar_single_movie"></include>
-</RelativeLayout>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:layout_marginTop="?android:attr/actionBarSize"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:id="@+id/smoothProgressBar"
+        app:spb_sections_count="4"
+        app:spb_color="@color/accentColor"
+        app:spb_speed="1"
+        app:spb_stroke_width="4dp"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="35.5"
+        app:spb_progressiveStop_speed="1.4"
+        />
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@drawable/favoriteiconsmall"
+        fab:fab_colorNormal="@color/colorPrimary"
+        fab:fab_colorPressed="@color/colorPrimaryDark"
+        fab:fab_colorRipple="@color/accentColor" />
+</FrameLayout>
