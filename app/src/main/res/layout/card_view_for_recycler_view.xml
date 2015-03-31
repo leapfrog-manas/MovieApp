@@ -40,14 +40,18 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="200sp"
                     android:layout_height="wrap_content"
                     android:text="Movie Name"
                     android:textAllCaps="true"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:gravity="center_vertical"
-                    android:id="@+id/movieName" />
+                    android:id="@+id/movieName"
+
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    />
             </RelativeLayout>
 
             <RelativeLayout

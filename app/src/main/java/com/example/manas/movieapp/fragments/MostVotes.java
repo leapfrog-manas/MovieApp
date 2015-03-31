@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.example.manas.movieapp.API;
@@ -19,21 +18,23 @@ import com.example.manas.movieapp.Adapters.HomeFragmentRCVAdapter;
 import com.example.manas.movieapp.Info.MostPopular;
 import com.example.manas.movieapp.Info.MovieInfo;
 import com.example.manas.movieapp.R;
+import com.example.manas.movieapp.interfaces.ChangeToolbarTitle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 /**
- * Created by Manas on 3/23/2015.
+ * Created by Manas on 3/30/2015.
  */
-public class MainFragmentHandler extends Fragment {
+public class MostVotes extends Fragment implements ChangeToolbarTitle {
+
+
     FragmentManager fragmentManager;
     List<MovieInfo> movieInfoList = new ArrayList<>();
     RecyclerView recyclerView;
@@ -41,13 +42,16 @@ public class MainFragmentHandler extends Fragment {
     SmoothProgressBar smoothProgressDrawable;
     String url = "https://api.themoviedb.org/3";
     HomeFragmentRCVAdapter homeFragmentRCVAdapter;
+    ChangeToolbarTitle changeToolbarTitle;
 
-    public MainFragmentHandler() {
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        changeToolbarTitle = (ChangeToolbarTitle) activity;
     }
 
-    public MainFragmentHandler(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public MostVotes() {
         requestData();
     }
 
@@ -66,6 +70,7 @@ public class MainFragmentHandler extends Fragment {
         smoothProgressDrawable = (SmoothProgressBar) v.findViewById(R.id.smoothProgressBar);
         homeFragmentRCVAdapter = new HomeFragmentRCVAdapter(getActivity());
         recyclerView.setAdapter(homeFragmentRCVAdapter);
+        changeToolbarTitle.changeTitle("Most Votes");
         return v;
     }
 
@@ -76,7 +81,7 @@ public class MainFragmentHandler extends Fragment {
                 .build();
         API api = adapter.create(API.class);
 
-        api.getPopular(new Callback<MostPopular>() {
+        api.getMostVotes(new Callback<MostPopular>() {
             @Override
             public void success(MostPopular mostPopular, Response response) {
                 Log.e("Most Popular", mostPopular.results.get(0).original_title);
@@ -86,9 +91,15 @@ public class MainFragmentHandler extends Fragment {
 
             @Override
             public void failure(RetrofitError error) {
+                Log.e("ERROR", error.toString());
 
             }
         });
+
+    }
+
+    @Override
+    public void changeTitle(String title) {
 
     }
 }

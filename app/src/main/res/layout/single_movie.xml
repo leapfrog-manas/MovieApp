@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ffffff"
-    >
-
+    android:focusableInTouchMode="true"
+    android:background="#ffffff">
 
     <ScrollView
         android:orientation="vertical"
@@ -14,8 +13,7 @@
         android:layout_height="match_parent"
         android:background="#FFFFFF"
         android:id="@+id/scrollView"
-        android:visibility="invisible"
-        >
+        android:visibility="invisible">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -63,15 +61,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:rating="4.5"
+                    style="?android:attr/ratingBarStyleSmall"
 
-                    style="?android:attr/ratingBarStyleIndicator"
                     android:id="@+id/singleMovieRating" />
+
+                <View
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider">
+
+                </View>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Synopsis"
-
                     android:textSize="16sp"
                     android:textColor="#727272" />
 
@@ -82,67 +88,129 @@
                     android:textColor="#727272"
                     android:id="@+id/synopsisTV"
                     android:textSize="14sp" />
-                <TextView
-                    android:layout_width="wrap_content"
+
+                <View
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider"></View>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Budget"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
-                    android:textSize="16sp"
-                    android:textColor="#727272" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#727272"
-                    android:id="@+id/budgetTV"
-                    android:textSize="14sp" />
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/budgeticon" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Revenue"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Budget"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:textColor="#727272" />
 
-                    android:textSize="16sp"
-                    android:textColor="#727272" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#727272"
+                            android:id="@+id/budgetTV"
+                            android:gravity="center"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#727272"
-                    android:id="@+id/revenueTV"
-                    android:textSize="14sp" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Language"
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/revenueicon" />
 
-                    android:textSize="16sp"
-                    android:textColor="#727272" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Revenue"
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#727272"
-                    android:id="@+id/languageTV"
-                    android:textSize="14sp" />
+                            android:textSize="16sp"
+                            android:textColor="#727272" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#727272"
+                            android:id="@+id/revenueTV"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/languageicon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Language"
+                            android:textSize="16sp"
+                            android:textColor="#727272" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#727272"
+                            android:id="@+id/languageTV"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorDivider">
+
+                </View>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cast"
                     android:textColor="#727272"
-                    android:textSize="16sp"
-                    />
+                    android:textSize="16sp" />
+
                 <ListView
+                    android:paddingBottom="4dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="600dp"
+                    android:layout_height="500dp"
                     android:id="@+id/castLV"
-                    ></ListView>
-
-
+                    android:dividerHeight="8dp"></ListView>
             </LinearLayout>
-
-
         </RelativeLayout>
     </ScrollView>
 
@@ -167,8 +235,7 @@
         app:spb_mirror_mode="false"
         app:spb_progressiveStart_activated="true"
         app:spb_progressiveStart_speed="35.5"
-        app:spb_progressiveStop_speed="1.4"
-        />
+        app:spb_progressiveStop_speed="1.4" />
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"

@@ -1,9 +1,16 @@
 package com.example.manas.movieapp.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,9 +47,9 @@ import retrofit.client.Response;
 public class SingleMovieFragmentHandler extends ActionBarActivity {
     String id;
 
-SmoothProgressBar smoothProgressBar;
-    TextView nameTV, synopsisTV, budgetTV, languageTV,revenueTV;
-    ImageView backdropIV,posterIV;
+    SmoothProgressBar smoothProgressBar;
+    TextView nameTV, synopsisTV, budgetTV, languageTV, revenueTV;
+    ImageView backdropIV, posterIV;
     RatingBar ratingRB;
     ScrollView scrollView;
     android.support.v7.widget.Toolbar toolbar;
@@ -50,6 +57,7 @@ SmoothProgressBar smoothProgressBar;
     DatabaseHelper db;
     ListView cast;
     CastAdapter castAdater;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +81,7 @@ SmoothProgressBar smoothProgressBar;
         revenueTV = (TextView) findViewById(R.id.revenueTV);
         budgetTV = (TextView) findViewById(R.id.budgetTV);
         cast = (ListView) findViewById(R.id.castLV);
-        smoothProgressBar =(SmoothProgressBar) findViewById(R.id.smoothProgressBar);
+        smoothProgressBar = (SmoothProgressBar) findViewById(R.id.smoothProgressBar);
 
 
         setSupportActionBar(toolbar);
@@ -120,34 +128,6 @@ SmoothProgressBar smoothProgressBar;
         });
     }
 
-//    private void setActionBarColor() {
-//        //change colors of the stars in RatingBar
-//        LayerDrawable stars = (LayerDrawable) ratingRB.getProgressDrawable();
-//        stars.getDrawable(0).setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
-//        stars.getDrawable(1).setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
-//        stars.getDrawable(2).setColorFilter(Color.YELLOW, PorterDuff.Mode.SRC_ATOP);
-//
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), poster_id);
-//        Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
-//            @Override
-//            public void onGenerated(Palette palette) {
-//
-//                int darkVibrantColor = palette.getDarkVibrantColor(222345);
-//                int lightVibrantColor = palette.getLightVibrantColor(222345);
-//                int darkMutedColor = palette.getDarkMutedColor(222345);
-//                int lightMutedColor = palette.getLightMutedColor(222345);
-//                int mutedColor = palette.getMutedColor(222345);
-//                int vibrantColor = palette.getVibrantColor(222345);
-//                toolbar.setBackgroundColor(vibrantColor);
-//
-//                //change floatingactionbar color according to palette
-//                floatingActionButton.setColorPressed(darkVibrantColor);
-//                floatingActionButton.setColorNormal(vibrantColor);
-//
-//
-//            }
-//        });
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,23 +153,32 @@ SmoothProgressBar smoothProgressBar;
 
     private void requestData() {
         String url = "https://api.themoviedb.org/3";
-    ;
+        ;
         final RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(url)
                 .build();
         API api = adapter.create(API.class);
 
-        api.getSingle(id,new Callback<SinlgeMovie>() {
+        api.getSingle(id, new Callback<SinlgeMovie>() {
             @Override
             public void success(SinlgeMovie singleMovie, Response response) {
-                Log.e("BackDrop Path", singleMovie.backdrop_path);
-                Log.e("Poster Path", singleMovie.poster_path);
 
-                Picasso.with(SingleMovieFragmentHandler.this).load("http://image.tmdb.org/t/p/w500"+singleMovie.backdrop_path).into(backdropIV);
-                Picasso.with(SingleMovieFragmentHandler.this).load("http://image.tmdb.org/t/p/w500"+singleMovie.poster_path).into(posterIV, new com.squareup.picasso.Callback() {
+                Picasso.with(SingleMovieFragmentHandler.this).load("http://image.tmdb.org/t/p/w500" + singleMovie.backdrop_path).error(R.drawable.picturenotavailable).placeholder(R.drawable.loading).into(backdropIV, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        setActionBarColor(backdropIV.getDrawable());
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
+                Picasso.with(SingleMovieFragmentHandler.this).load("http://image.tmdb.org/t/p/w500" + singleMovie.poster_path).into(posterIV, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
                         posterIV.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
 
                     }
 
@@ -199,32 +188,62 @@ SmoothProgressBar smoothProgressBar;
                     }
                 });
 
-               setEveryThing(singleMovie);
+                setEveryThing(singleMovie);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e("Error",error.toString());
+                Log.e("Error", error.toString());
             }
         });
 
     }
 
-    private void setEveryThing(SinlgeMovie singleMovie){
+    private void setActionBarColor(Drawable drawable) {
+        //change colors of the stars in RatingBar
+        LayerDrawable stars = (LayerDrawable) ratingRB.getProgressDrawable();
+        stars.getDrawable(0).setColorFilter(getResources().getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(1).setColorFilter(getResources().getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP);
+        stars.getDrawable(2).setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+
+                int darkVibrantColor = palette.getDarkVibrantColor(222345);
+                int lightVibrantColor = palette.getLightVibrantColor(222345);
+                int darkMutedColor = palette.getDarkMutedColor(222345);
+                int lightMutedColor = palette.getLightMutedColor(222345);
+                int mutedColor = palette.getMutedColor(222345);
+                int vibrantColor = palette.getVibrantColor(222345);
+                toolbar.setBackgroundColor(vibrantColor);
+
+                //change floatingactionbar color according to palette
+                if(palette.getDarkVibrantColor(222345) == Color.WHITE){
+                    Log.e("SAME SAME","SAME YO");
+                }
+                floatingActionButton.setColorPressed(darkVibrantColor);
+                floatingActionButton.setColorNormal(vibrantColor);
+
+
+            }
+        });
+    }
+
+    private void setEveryThing(SinlgeMovie singleMovie) {
         scrollView.setVisibility(View.VISIBLE);
         nameTV.setText(singleMovie.title);
+        castAdater = new CastAdapter(getLayoutInflater(), SingleMovieFragmentHandler.this, singleMovie);
+        cast.setAdapter(castAdater);
         getSupportActionBar().setTitle(singleMovie.title);
         synopsisTV.setText(singleMovie.overview);
         ratingRB.setRating(Float.parseFloat(singleMovie.vote_average) / 2);
         budgetTV.setText(singleMovie.budget);
         languageTV.setText(singleMovie.original_language);
         revenueTV.setText(singleMovie.revenue);
-        castAdater = new CastAdapter(getLayoutInflater(),SingleMovieFragmentHandler.this,singleMovie);
-        cast.setAdapter(castAdater);
+
         smoothProgressBar.setVisibility(View.INVISIBLE);
-        Log.e("Cast - Name", singleMovie.casts.cast.get(1).character + "  " + singleMovie.casts.cast.get(1).name);
+
     }
-
-
-
 }

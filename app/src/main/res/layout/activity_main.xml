@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/fragment_for_homepage"
-            class="com.example.manas.movieapp.fragments.MainFragmentHandler"></FrameLayout>
+            class="com.example.manas.movieapp.fragments.MostPopularMovies"></FrameLayout>
 
     </LinearLayout>
 
@@ -34,7 +34,7 @@
         android:id="@+id/fragment_for_drawer"
         android:layout_gravity="start"
 
-        class="com.example.manas.movieapp.fragments.MainFragmentHandler">
+        class="com.example.manas.movieapp.fragments.MostPopularMovies">
 
     </FrameLayout>
 </android.support.v4.widget.DrawerLayout>

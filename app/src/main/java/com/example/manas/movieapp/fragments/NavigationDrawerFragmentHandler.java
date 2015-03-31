@@ -1,15 +1,29 @@
 package com.example.manas.movieapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.example.manas.movieapp.Info.SinlgeMovie;
 import com.example.manas.movieapp.R;
+import com.example.manas.movieapp.interfaces.CloseDrawer;
+
+import org.parceler.transfuse.annotations.OnSaveInstanceState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,27 +31,139 @@ import java.util.List;
 /**
  * Created by Manas on 3/24/2015.
  */
-public class NavigationDrawerFragmentHandler extends Fragment {
-ListView sidelist;
+public class NavigationDrawerFragmentHandler extends Fragment implements CloseDrawer {
+    ListView sidelist;
     List<String> itemlist = new ArrayList<>();
-    ArrayAdapter<String> arrayAdapter;
+    int mPosition = -1; //will be used to highlight selected.
+    CloseDrawer closeDrawer;
+    SharedPreferences movie;
+    String filename = "movie";
+    NavigationListAdapter navigationListAdapter;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        closeDrawer = (CloseDrawer) activity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-       View v= inflater.inflate(R.layout.fragment_navigation_drawer,container,false);
-        getListReady();
-        arrayAdapter = new ArrayAdapter<String>(getActivity(),R.layout.simple_list_item,R.id.tv1,itemlist);
-        sidelist = (ListView) v.findViewById(R.id.listviewsidemenu);
-        sidelist.setAdapter(arrayAdapter);
-        return  v;
+        View v = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+
+        return initializeEverything(v);
     }
 
-    public void getListReady(){
-         String[] items = new String[]{"Top Rented", "Box Office Movies","Up Comming Movies","In Theater Movies"};
-         for(int i =0;i<items.length;i++){
-             itemlist.add(items[i]);
-         }
-     }
+    public View initializeEverything(View v) {
+        getListReady();
+        sidelist = (ListView) v.findViewById(R.id.listviewsidemenu);
+        navigationListAdapter = new NavigationListAdapter();
+        sidelist.setAdapter(navigationListAdapter);
+        movie = getActivity().getSharedPreferences(filename, 1);
 
+        mPosition = movie.getInt("position", 0);
+        if (mPosition != -1) {
+            Log.e("mposition", mPosition + "");
+//           sidelist.getChildAt(mPosition).setBackgroundColor(Color.GRAY);
+        }
 
+        sidelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                sidelist.setSelection(position);
+                if (mPosition != -1) {
+                    sidelist.getChildAt(mPosition).setBackgroundColor(Color.WHITE); //reset color of previously pressed item to white
+                }
+                sidelist.getChildAt(position).setBackgroundColor(Color.GRAY); //set current item to gray.
+                mPosition = position; //put value of currently selected item to mPosition.
+
+                SharedPreferences.Editor edit = movie.edit();
+                edit.putInt("position", position);
+                edit.commit();
+
+                switch (position) {
+                    case 0:
+                        fragmentTransaction.replace(R.id.fragment_for_homepage, new MostPopularMovies());
+                        fragmentTransaction.commit();
+                        closeDrawer.closeDrawer();
+                        break;
+                    case 1:
+                        fragmentTransaction.replace(R.id.fragment_for_homepage, new MostVotes());
+                        fragmentTransaction.commit();
+                        closeDrawer.closeDrawer();
+                        break;
+                    case 2:
+                        fragmentTransaction.replace(R.id.fragment_for_homepage, new InTheaters());
+                        fragmentTransaction.commit();
+                        closeDrawer.closeDrawer();
+                        break;
+                    case 3:
+                        fragmentTransaction.replace(R.id.fragment_for_homepage, new UpComingMovies());
+                        fragmentTransaction.commit();
+                        closeDrawer.closeDrawer();
+                        break;
+                }
+
+            }
+        });
+        return v;
+    }
+
+    /**
+     * @author manas shrestha
+     * this method will just populate the itemlist
+     */
+    public void getListReady() {
+        String[] items = new String[]{"Most Popular", "Most Votes", "In threaters", "Upcoming"};
+        for (int i = 0; i < items.length; i++) {
+            itemlist.add(items[i]);
+        }
+    }
+
+    @Override
+    public void closeDrawer() {
+    }
+
+    public class NavigationListAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return itemlist.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return itemlist.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View v = inflater.inflate(R.layout.simple_list_item, parent, false);
+            ImageView imageView = (ImageView) v.findViewById(R.id.imageView1);
+            TextView tv = (TextView) v.findViewById(R.id.tv1);
+            tv.setText(itemlist.get(position));
+            switch (position) {
+                case 0:
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.mostpopular));
+                    break;
+                case 1:
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.mostvotes));
+                    break;
+                case 2:
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.intheaters));
+                    break;
+                case 3:
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.upcomingicon));
+                    break;
+            }
+            return v;
+        }
+    }
 }
