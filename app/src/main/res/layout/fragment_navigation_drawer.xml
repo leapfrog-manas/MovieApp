@@ -68,10 +68,12 @@
         android:id="@+id/divider"
         android:background="#B6B6B6"/>
     <ListView
+        android:layout_marginTop="8dp"
         android:layout_below="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listviewsidemenu"
+
 
         >
 

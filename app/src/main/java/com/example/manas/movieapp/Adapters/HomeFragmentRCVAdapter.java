@@ -1,31 +1,25 @@
 package com.example.manas.movieapp.Adapters;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.TransitionManager;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.manas.movieapp.Fragment_Handlers.MainFragmentHandler;
-import com.example.manas.movieapp.Fragment_Handlers.SingleMovieFragmentHandler;
-import com.example.manas.movieapp.Info.MovieInfo;
+import com.example.manas.movieapp.Info.MostPopular;
 import com.example.manas.movieapp.MainActivity;
+import com.example.manas.movieapp.utils.DatabaseHelper;
 import com.example.manas.movieapp.R;
-
-import java.util.List;
-
-import static android.support.v7.widget.RecyclerView.ViewHolder;
+import com.pnikosis.materialishprogress.ProgressWheel;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Manas on 3/23/2015.
@@ -33,91 +27,99 @@ import static android.support.v7.widget.RecyclerView.ViewHolder;
 public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCVAdapter.ViewHolder> {
     Context context;
     LayoutInflater layoutInflater;
-    FragmentManager fragmentManager;
-    List<MovieInfo> movieInfoList;
-    ViewGroup mRoot;
+    MainActivity mainActivity;
+    MostPopular mostPopular = new MostPopular();
 
-
-    public HomeFragmentRCVAdapter(Context c, FragmentManager fragmentManager, List<MovieInfo> movieInfoList,ViewGroup mRoot) {
+    public HomeFragmentRCVAdapter(Context c) {
         this.context = c;
         layoutInflater = layoutInflater.from(context);
-        this.fragmentManager = fragmentManager;
-        this.movieInfoList = movieInfoList;
-        this.mRoot = mRoot;
+
+        this.mainActivity = (MainActivity) c;
+    }
+
+    public void setMostPopularObject(MostPopular mostPopular) {
+        this.mostPopular = mostPopular;
+        notifyDataSetChanged();
+    }
+
+    public void addMostPopularObject(MostPopular mostPopular) {
+        this.mostPopular = mostPopular;
 
     }
 
     @Override
     public HomeFragmentRCVAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = layoutInflater.inflate(R.layout.card_view_for_recycler_view, viewGroup, false);
-
         ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
 
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(HomeFragmentRCVAdapter.ViewHolder holder, int i) {
-        MovieInfo mf = movieInfoList.get(i);
-        holder.moviePoster.setImageResource(mf.poster_id);
-        holder.movieName.setText(mf.Name);
-        holder.movieRating.setRating(Float.parseFloat(mf.rating) / 2);
+    public void onBindViewHolder(final HomeFragmentRCVAdapter.ViewHolder holder, int i) {
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w500" + mostPopular.results.get(i).backdrop_path).error(R.drawable.picturenotavailable).into(holder.moviePoster, new Callback() {
+            @Override
+            public void onSuccess() {
+                holder.wheel.setVisibility(View.INVISIBLE);
+            }
 
-        holder.name = mf.Name;
-        holder.rating = mf.rating;
-        holder.poster_id = mf.poster_id;
-        holder.synopsis = mf.synopsis;
+            @Override
+            public void onError() {
+
+            }
+        });
+        holder.movieName.setText(mostPopular.results.get(i).title);
+        holder.id = mostPopular.results.get(i).id;
+        holder.movieRating.setRating(Float.parseFloat(mostPopular.results.get(i).vote_average) / 2);
+        DatabaseHelper db = new DatabaseHelper(context);
+        db.getWritableDatabase();
     }
 
     @Override
     public int getItemCount() {
-        return movieInfoList.size();
+        return mostPopular.results.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView moviePoster;
         TextView movieName;
-        String name;
-        String rating;
-        String synopsis;
-        int poster_id;
+        String id;
         RatingBar movieRating;
+        ViewGroup viewGroup;
+        ImageView bookmark;
+        RelativeLayout moviePosterBottom;
+        ProgressWheel wheel;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            wheel = (ProgressWheel) itemView.findViewById(R.id.progress_wheel);
+            viewGroup = (ViewGroup) itemView.findViewById(R.id.container_a);
+            bookmark = (ImageView) itemView.findViewById(R.id.bookmarkIV);
             moviePoster = (ImageView) itemView.findViewById(R.id.moviePoster);
             movieName = (TextView) itemView.findViewById(R.id.movieName);
             movieRating = (RatingBar) itemView.findViewById(R.id.movieRating);
 
-
+            LayerDrawable stars = (LayerDrawable) movieRating.getProgressDrawable();
+            stars.getDrawable(0).setColorFilter(context.getResources().getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP);
+            stars.getDrawable(1).setColorFilter(context.getResources().getColor(R.color.colorPrimaryLight), PorterDuff.Mode.SRC_ATOP);
+            stars.getDrawable(2).setColorFilter(context.getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_ATOP);
+            moviePosterBottom = (RelativeLayout) itemView.findViewById(R.id.moviePosterBottom);
             itemView.setOnClickListener(this);
         }
 
+
         @Override
         public void onClick(View v) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
             Bundle bundle = new Bundle();
-            bundle.putString("name", name);
-            bundle.putString("rating", rating);
-            bundle.putString("synopsis", synopsis);
-            bundle.putInt("poster_id", poster_id);
+            bundle.putString("id", id);
 
-            SingleMovieFragmentHandler singleMovieFragmentHandler = new SingleMovieFragmentHandler(bundle, fragmentManager);
-            fragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,0,android.R.anim.slide_out_right,0);
-
-            fragmentTransaction.add(R.id.fragment_for_homepage, singleMovieFragmentHandler);
-            fragmentTransaction.addToBackStack("tag");
-            fragmentTransaction.commit();
-        }
-
-        public void toggleviews(View... views){
-            for(View current:views){
-                if(current.getVisibility()==View.VISIBLE){
-                    current.setVisibility(View.INVISIBLE);
-                }
-            }
+            mainActivity.startSingleMovieViewActivity(bundle, viewGroup);
 
         }
+
+
     }
 
 

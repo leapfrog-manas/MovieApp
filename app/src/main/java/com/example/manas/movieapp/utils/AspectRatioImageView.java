@@ -1,4 +1,4 @@
-package com.example.manas.movieapp.Utilities;
+package com.example.manas.movieapp.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;

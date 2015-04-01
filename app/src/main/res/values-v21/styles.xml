@@ -8,8 +8,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="divider">@color/colorDivider</item>
         <item name="icon">@color/colorTextIcon</item>
-
-
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:colorActivatedHighlight">@color/colorPrimaryDark</item>
 
     </style>
 
@@ -21,6 +21,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/accentColor</item>
         <item name="icon">@color/colorTextIcon</item>
+        <item name="android:textColor">@color/primaryText</item>
 
 
     </style>
