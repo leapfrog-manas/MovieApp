@@ -1,4 +1,4 @@
-package com.example.manas.movieapp.Utilities;
+package com.example.manas.movieapp.utils;
 
 /**
  * Created by Manas on 3/27/2015.
@@ -8,8 +8,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.manas.movieapp.Info.MovieInfo;
 
 /**
  * Created by root on 3/27/15.

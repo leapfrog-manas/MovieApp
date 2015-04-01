@@ -19,6 +19,7 @@ import com.example.manas.movieapp.Info.MostPopular;
 import com.example.manas.movieapp.Info.MovieInfo;
 import com.example.manas.movieapp.R;
 import com.example.manas.movieapp.interfaces.ChangeToolbarTitle;
+import com.melnykov.fab.ObservableScrollView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class MostVotes extends Fragment implements ChangeToolbarTitle {
     String url = "https://api.themoviedb.org/3";
     HomeFragmentRCVAdapter homeFragmentRCVAdapter;
     ChangeToolbarTitle changeToolbarTitle;
+    ObservableScrollView observableScrollView;
 
 
     @Override
@@ -64,6 +66,7 @@ public class MostVotes extends Fragment implements ChangeToolbarTitle {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
+
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         linearLayout = (RelativeLayout) v.findViewById(R.id.linearlayout);

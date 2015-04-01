@@ -1,20 +1,17 @@
 package com.example.manas.movieapp;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,21 +20,17 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.manas.movieapp.Utilities.DatabaseHelper;
 import com.example.manas.movieapp.fragments.InTheaters;
 import com.example.manas.movieapp.fragments.MostPopularMovies;
 import com.example.manas.movieapp.fragments.MostVotes;
 import com.example.manas.movieapp.fragments.NavigationDrawerFragmentHandler;
 import com.example.manas.movieapp.fragments.Search;
-import com.example.manas.movieapp.fragments.SingleMovieFragmentHandler;
+import com.example.manas.movieapp.fragments.SingleMovie;
 import com.example.manas.movieapp.fragments.UpComingMovies;
 import com.example.manas.movieapp.interfaces.ChangeToolbarTitle;
 import com.example.manas.movieapp.interfaces.CloseDrawer;
-
-import java.io.File;
 
 
 public class MainActivity extends ActionBarActivity implements ChangeToolbarTitle, CloseDrawer {
@@ -151,7 +144,7 @@ public class MainActivity extends ActionBarActivity implements ChangeToolbarTitl
 //        TransitionManager.beginDelayedTransition(V, fade);
 //        toggleVisibility(V);
 //        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this,null);
-        Intent intent = new Intent(MainActivity.this, SingleMovieFragmentHandler.class);
+        Intent intent = new Intent(MainActivity.this, SingleMovie.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

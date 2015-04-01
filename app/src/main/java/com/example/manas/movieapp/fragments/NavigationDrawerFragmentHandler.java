@@ -85,25 +85,26 @@ public class NavigationDrawerFragmentHandler extends Fragment implements CloseDr
                 switch (position) {
                     case 0:
                         fragmentTransaction.replace(R.id.fragment_for_homepage, new MostPopularMovies());
-                        fragmentTransaction.commit();
-                        closeDrawer.closeDrawer();
+
                         break;
                     case 1:
                         fragmentTransaction.replace(R.id.fragment_for_homepage, new MostVotes());
-                        fragmentTransaction.commit();
-                        closeDrawer.closeDrawer();
+                        
                         break;
                     case 2:
                         fragmentTransaction.replace(R.id.fragment_for_homepage, new InTheaters());
-                        fragmentTransaction.commit();
-                        closeDrawer.closeDrawer();
+
                         break;
                     case 3:
                         fragmentTransaction.replace(R.id.fragment_for_homepage, new UpComingMovies());
-                        fragmentTransaction.commit();
-                        closeDrawer.closeDrawer();
+
                         break;
+
+
                 }
+
+                fragmentTransaction.commit();
+                closeDrawer.closeDrawer();
 
             }
         });

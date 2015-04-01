@@ -1,7 +1,6 @@
 package com.example.manas.movieapp.fragments;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,13 +11,10 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.graphics.Palette;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -29,11 +25,10 @@ import com.example.manas.movieapp.API;
 import com.example.manas.movieapp.Adapters.CastAdapter;
 import com.example.manas.movieapp.Info.SinlgeMovie;
 import com.example.manas.movieapp.R;
-import com.example.manas.movieapp.Utilities.DatabaseHelper;
+import com.example.manas.movieapp.utils.DatabaseHelper;
 import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ObservableScrollView;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit.Callback;
@@ -44,14 +39,14 @@ import retrofit.client.Response;
 /**
  * Created by Manas on 3/23/2015.
  */
-public class SingleMovieFragmentHandler extends ActionBarActivity {
+public class SingleMovie extends ActionBarActivity {
     String id;
 
     SmoothProgressBar smoothProgressBar;
     TextView nameTV, synopsisTV, budgetTV, languageTV, revenueTV;
     ImageView backdropIV, posterIV;
     RatingBar ratingRB;
-    ScrollView scrollView;
+    ObservableScrollView scrollView;
     android.support.v7.widget.Toolbar toolbar;
     FloatingActionButton floatingActionButton;
     DatabaseHelper db;
@@ -62,7 +57,7 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_movie);
-        db = new DatabaseHelper(SingleMovieFragmentHandler.this);
+        db = new DatabaseHelper(SingleMovie.this);
 
         Bundle b = getIntent().getExtras();
 
@@ -72,10 +67,12 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.appbar_single_movie);
         ratingRB = (RatingBar) findViewById(R.id.singleMovieRating);
         backdropIV = (ImageView) findViewById(R.id.backdropiv);
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        scrollView = (ObservableScrollView) findViewById(R.id.scrollView);
         nameTV = (TextView) findViewById(R.id.nameTV);
         synopsisTV = (TextView) findViewById(R.id.synopsisTV);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        floatingActionButton.attachToScrollView(scrollView);
+
         posterIV = (ImageView) findViewById(R.id.posterIV);
         languageTV = (TextView) findViewById(R.id.languageTV);
         revenueTV = (TextView) findViewById(R.id.revenueTV);
@@ -144,7 +141,8 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            NavUtils.navigateUpFromSameTask(this);
+//            NavUtils.navigateUpFromSameTask(this);
+            onBackPressed();
             return true;
 
         }
@@ -163,7 +161,7 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
             @Override
             public void success(SinlgeMovie singleMovie, Response response) {
 
-                Picasso.with(SingleMovieFragmentHandler.this).load("http://image.tmdb.org/t/p/w500" + singleMovie.backdrop_path).error(R.drawable.picturenotavailable).placeholder(R.drawable.loading).into(backdropIV, new com.squareup.picasso.Callback() {
+                Picasso.with(SingleMovie.this).load("http://image.tmdb.org/t/p/w500" + singleMovie.backdrop_path).error(R.drawable.picturenotavailable).placeholder(R.drawable.loading).into(backdropIV, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
                         setActionBarColor(backdropIV.getDrawable());
@@ -174,7 +172,7 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
 
                     }
                 });
-                Picasso.with(SingleMovieFragmentHandler.this).load("http://image.tmdb.org/t/p/w500" + singleMovie.poster_path).into(posterIV, new com.squareup.picasso.Callback() {
+                Picasso.with(SingleMovie.this).load("http://image.tmdb.org/t/p/w500" + singleMovie.poster_path).into(posterIV, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
                         posterIV.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -218,10 +216,11 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
                 int mutedColor = palette.getMutedColor(222345);
                 int vibrantColor = palette.getVibrantColor(222345);
                 toolbar.setBackgroundColor(vibrantColor);
+                toolbar.getBackground().setAlpha(0);
 
                 //change floatingactionbar color according to palette
-                if(palette.getDarkVibrantColor(222345) == Color.WHITE){
-                    Log.e("SAME SAME","SAME YO");
+                if (palette.getDarkVibrantColor(222345) == Color.WHITE) {
+                    Log.e("SAME SAME", "SAME YO");
                 }
                 floatingActionButton.setColorPressed(darkVibrantColor);
                 floatingActionButton.setColorNormal(vibrantColor);
@@ -234,7 +233,7 @@ public class SingleMovieFragmentHandler extends ActionBarActivity {
     private void setEveryThing(SinlgeMovie singleMovie) {
         scrollView.setVisibility(View.VISIBLE);
         nameTV.setText(singleMovie.title);
-        castAdater = new CastAdapter(getLayoutInflater(), SingleMovieFragmentHandler.this, singleMovie);
+        castAdater = new CastAdapter(getLayoutInflater(), SingleMovie.this, singleMovie);
         cast.setAdapter(castAdater);
         getSupportActionBar().setTitle(singleMovie.title);
         synopsisTV.setText(singleMovie.overview);

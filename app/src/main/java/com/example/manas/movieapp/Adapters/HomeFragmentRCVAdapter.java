@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.manas.movieapp.Info.MostPopular;
 import com.example.manas.movieapp.MainActivity;
-import com.example.manas.movieapp.Utilities.DatabaseHelper;
+import com.example.manas.movieapp.utils.DatabaseHelper;
 import com.example.manas.movieapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -40,6 +40,10 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
         notifyDataSetChanged();
     }
 
+    public void addMostPopularObject(MostPopular mostPopular) {
+        this.mostPopular = mostPopular;
+
+    }
     @Override
     public HomeFragmentRCVAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = layoutInflater.inflate(R.layout.card_view_for_recycler_view, viewGroup, false);

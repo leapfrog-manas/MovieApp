@@ -41,6 +41,7 @@ public class InTheaters extends Fragment implements ChangeToolbarTitle {
     String url = "https://api.themoviedb.org/3";
     HomeFragmentRCVAdapter homeFragmentRCVAdapter;
     ChangeToolbarTitle changeToolbarTitle;
+    int pageno = 1;
 
     public InTheaters() {
         requestData();
