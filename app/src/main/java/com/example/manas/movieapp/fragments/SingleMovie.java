@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -15,11 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.example.manas.movieapp.API;
 import com.example.manas.movieapp.Adapters.CastAdapter;
@@ -41,7 +46,7 @@ import retrofit.client.Response;
  */
 public class SingleMovie extends ActionBarActivity {
     String id;
-
+    String path="https://www.youtube.com/watch?v=2bqh-UCY6Zg";
     SmoothProgressBar smoothProgressBar;
     TextView nameTV, synopsisTV, budgetTV, languageTV, revenueTV;
     ImageView backdropIV, posterIV;
@@ -49,7 +54,7 @@ public class SingleMovie extends ActionBarActivity {
     ObservableScrollView scrollView;
     android.support.v7.widget.Toolbar toolbar;
     FloatingActionButton floatingActionButton;
-    DatabaseHelper db;
+
     ListView cast;
     CastAdapter castAdater;
 
@@ -57,12 +62,13 @@ public class SingleMovie extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_movie);
-        db = new DatabaseHelper(SingleMovie.this);
-
         Bundle b = getIntent().getExtras();
 
         id = b.getString("id");
         Log.e("ID", id);
+
+
+
 
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.appbar_single_movie);
         ratingRB = (RatingBar) findViewById(R.id.singleMovieRating);
@@ -107,22 +113,7 @@ public class SingleMovie extends ActionBarActivity {
             }
         });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-//                if (db.getMovieStatus(name) == 1) {
-//
-//                    db.updateMovieStatus(name, 0);
-//                    floatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.favoriteiconsmall));
-//                } else if (db.getMovieStatus(name) == 0) {
-//                    db.updateMovieStatus(name, 1);
-//                    floatingActionButton.setImageDrawable(getResources().getDrawable(R.drawable.favoriteiconyellow));
-//                }
-
-
-            }
-        });
     }
 
 
@@ -176,8 +167,6 @@ public class SingleMovie extends ActionBarActivity {
                     @Override
                     public void onSuccess() {
                         posterIV.setBackgroundColor(Color.parseColor("#FFFFFF"));
-
-
                     }
 
                     @Override

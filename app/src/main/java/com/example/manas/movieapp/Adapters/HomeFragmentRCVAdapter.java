@@ -17,6 +17,8 @@ import com.example.manas.movieapp.Info.MostPopular;
 import com.example.manas.movieapp.MainActivity;
 import com.example.manas.movieapp.utils.DatabaseHelper;
 import com.example.manas.movieapp.R;
+import com.pnikosis.materialishprogress.ProgressWheel;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -44,6 +46,7 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
         this.mostPopular = mostPopular;
 
     }
+
     @Override
     public HomeFragmentRCVAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = layoutInflater.inflate(R.layout.card_view_for_recycler_view, viewGroup, false);
@@ -54,7 +57,17 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
 
     @Override
     public void onBindViewHolder(final HomeFragmentRCVAdapter.ViewHolder holder, int i) {
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w500" + mostPopular.results.get(i).backdrop_path).error(R.drawable.picturenotavailable).placeholder(R.drawable.loading).into(holder.moviePoster);
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w500" + mostPopular.results.get(i).backdrop_path).error(R.drawable.picturenotavailable).into(holder.moviePoster, new Callback() {
+            @Override
+            public void onSuccess() {
+                holder.wheel.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
         holder.movieName.setText(mostPopular.results.get(i).title);
         holder.id = mostPopular.results.get(i).id;
         holder.movieRating.setRating(Float.parseFloat(mostPopular.results.get(i).vote_average) / 2);
@@ -76,9 +89,11 @@ public class HomeFragmentRCVAdapter extends RecyclerView.Adapter<HomeFragmentRCV
         ViewGroup viewGroup;
         ImageView bookmark;
         RelativeLayout moviePosterBottom;
+        ProgressWheel wheel;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            wheel = (ProgressWheel) itemView.findViewById(R.id.progress_wheel);
             viewGroup = (ViewGroup) itemView.findViewById(R.id.container_a);
             bookmark = (ImageView) itemView.findViewById(R.id.bookmarkIV);
             moviePoster = (ImageView) itemView.findViewById(R.id.moviePoster);

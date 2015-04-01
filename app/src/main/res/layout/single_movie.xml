@@ -210,7 +210,10 @@
                     android:layout_height="500dp"
                     android:id="@+id/castLV"
                     android:dividerHeight="8dp"></ListView>
+
             </LinearLayout>
+
+
         </RelativeLayout>
     </com.melnykov.fab.ObservableScrollView>
 

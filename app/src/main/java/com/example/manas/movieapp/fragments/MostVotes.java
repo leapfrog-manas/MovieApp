@@ -44,8 +44,10 @@ public class MostVotes extends Fragment implements ChangeToolbarTitle {
     String url = "https://api.themoviedb.org/3";
     HomeFragmentRCVAdapter homeFragmentRCVAdapter;
     ChangeToolbarTitle changeToolbarTitle;
-    ObservableScrollView observableScrollView;
-
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    LinearLayoutManager mLayoutManager;
+    int pageno = 1;
+    MostPopular mostPopular1;
 
     @Override
     public void onAttach(Activity activity) {
@@ -68,12 +70,51 @@ public class MostVotes extends Fragment implements ChangeToolbarTitle {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
         linearLayout = (RelativeLayout) v.findViewById(R.id.linearlayout);
         smoothProgressDrawable = (SmoothProgressBar) v.findViewById(R.id.smoothProgressBar);
         homeFragmentRCVAdapter = new HomeFragmentRCVAdapter(getActivity());
         recyclerView.setAdapter(homeFragmentRCVAdapter);
         changeToolbarTitle.changeTitle("Most Votes");
+
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+
+                visibleItemCount = mLayoutManager.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+
+
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+
+                        pageno++;
+                        Log.v("...", "Last Item Wow !");
+                        final RestAdapter adapter = new RestAdapter.Builder()
+                                .setEndpoint(url)
+                                .build();
+                        API api = adapter.create(API.class);
+
+                        api.getMostVotes(pageno + "", new Callback<MostPopular>() {
+                            @Override
+                            public void success(MostPopular mostPopular, Response response) {
+                                Log.e("Most Popular", mostPopular.results.get(0).original_title);
+                                mostPopular1.results.addAll(mostPopular.results);
+                                homeFragmentRCVAdapter.setMostPopularObject(mostPopular1);
+
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+
+                            }
+                        });
+                    }
+
+
+            }
+        });
         return v;
     }
 
@@ -84,12 +125,13 @@ public class MostVotes extends Fragment implements ChangeToolbarTitle {
                 .build();
         API api = adapter.create(API.class);
 
-        api.getMostVotes(new Callback<MostPopular>() {
+        api.getMostVotes(pageno+"",new Callback<MostPopular>() {
             @Override
             public void success(MostPopular mostPopular, Response response) {
                 Log.e("Most Popular", mostPopular.results.get(0).original_title);
+                mostPopular1 = mostPopular;
                 smoothProgressDrawable.setVisibility(View.INVISIBLE);
-                homeFragmentRCVAdapter.setMostPopularObject(mostPopular);
+                homeFragmentRCVAdapter.setMostPopularObject(mostPopular1);
             }
 
             @Override
